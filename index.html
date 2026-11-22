@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Princess Invoice Pro</title>
+
+  <!-- PWA & Mobil-inställningar -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Princess Invoice">
+  <link id="dynamicFavicon" rel="icon" type="image/png" href="">
+  <link id="dynamicAppleIcon" rel="apple-touch-icon" href="">
+  <link id="dynamicManifest" rel="manifest" href="">
+
+  <style>
+    :root {
+      --primary: rgb(37, 99, 235);
+      --primary-hover: rgb(29, 78, 216);
+      --success: rgb(22, 163, 74);
+      --whatsapp: rgb(37, 211, 102);
+      --whatsapp-hover: rgb(22, 163, 74);
+      --warning: rgb(217, 119, 6);
+      --danger: rgb(239, 68, 68);
+      --love: rgb(225, 29, 72);
+      --bg: rgb(241, 245, 249);
+      --card: rgb(255, 255, 255);
+      --text: rgb(30, 41, 59);
+      --muted: rgb(100, 116, 139);
+      --border: rgb(203, 213, 225);
+      --soft-bg: rgb(248, 250, 252);
+    }
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Noto Sans CJK SC", "Apple SD Gothic Neo", sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 16px;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+    .app-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 24px;
+    }
+    @media (max-width: 960px) {
+      .app-container { grid-template-columns: 1fr; }
+    }
+    .panel {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+    .top-bar h2 { margin: 0; border: none; padding: 0; }
+    .top-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .compact-select { width: auto; padding: 6px 10px; font-size: 0.9rem; font-weight: 600; }
+    .install-btn {
+      background-color: var(--love);
+      color: white;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      margin-top: 0;
+      border-radius: 6px;
+    }
+    .install-btn:hover { background-color: rgb(190, 18, 60); }
+    h2, h3 {
+      margin-top: 0;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .form-group { margin-bottom: 12px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1.4fr 0.9fr; gap: 10px; }
+    @media (max-width: 600px) {
+      .form-row, .form-row-3 { grid-template-columns: 1fr; }
+    }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0 14px 0;
+      padding: 10px 12px;
+      background-color: var(--soft-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      cursor: pointer;
+    }
+    .checkbox-row label { margin: 0; cursor: pointer; font-weight: 600; }
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    button:hover { background-color: var(--primary-hover); }
+    button.secondary { background-color: var(--muted); }
+    button.whatsapp { background-color: var(--whatsapp); color: rgb(255, 255, 255); }
+    button.whatsapp:hover { background-color: var(--whatsapp-hover); }
+    button.success { background-color: var(--success); padding: 6px 10px; font-size: 0.8rem; }
+    button.warning { background-color: var(--warning); padding: 6px 10px; font-size: 0.8rem; }
+    button.danger { background-color: var(--danger); padding: 6px 10px; font-size: 0.8rem; }
+    button.small { padding: 6px 10px; font-size: 0.8rem; }
+    .item-row {
+      display: grid;
+      grid-template-columns: 2fr 0.7fr 1fr auto;
+      gap: 8px;
+      align-items: end;
+      margin-bottom: 8px;
+    }
+
+    /* === KÄRLEKSNOTIS (VISAS EJ PÅ UTSKRIFT) === */
+    .love-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: linear-gradient(135deg, rgb(225, 29, 72), rgb(244, 63, 94));
+      color: white;
+      padding: 14px 26px;
+      border-radius: 999px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(225, 29, 72, 0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      z-index: 9999;
+      text-align: center;
+    }
+    .love-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* === FAKTURAPAPPER === */
+    .invoice-paper {
+      background: white;
+      padding: 36px;
+      border: 1px solid var(--border);
+      min-height: 820px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .invoice-logo {
+      max-height: 65px;
+      max-width: 180px;
+      object-fit: contain;
+      margin-bottom: 10px;
+      display: none;
+    }
+    .invoice-title {
+      font-size: 1.9rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
+    .invoice-addresses {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .invoice-table thead th {
+      background-color: var(--soft-bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 2px solid var(--border);
+      padding: 10px 8px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    .invoice-table td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px 8px;
+      text-align: left;
+    }
+    .invoice-table th.num, .invoice-table td.num { text-align: right; }
+    .invoice-totals {
+      width: 58%;
+      margin-left: auto;
+      margin-bottom: 20px;
+      break-inside: avoid;
+    }
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+    .totals-row.grand-total {
+      font-weight: bold;
+      font-size: 1.15rem;
+      border-top: 2px solid var(--text);
+      margin-top: 6px;
+      padding-top: 8px;
+    }
+    .tax-note-box {
+      font-size: 0.85rem;
+      color: var(--text);
+      background-color: rgb(239, 246, 255);
+      border: 1px solid rgb(191, 219, 254);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      display: none;
+      break-inside: avoid;
+    }
+    .terms-box {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+      white-space: pre-line;
+      display: none;
+      break-inside: avoid;
+    }
+    .payment-box {
+      background-color: var(--soft-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      font-size: 0.88rem;
+      break-inside: avoid;
+    }
+    .payment-box-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin: 0 0 8px 0;
+      color: var(--text);
+    }
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 16px;
+    }
+    .payment-item strong { color: var(--muted); font-weight: 600; }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.4px;
+    }
+    .invoice-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      break-inside: avoid;
+    }
+    .history-list { list-style: none; padding: 0; margin: 0; }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-paid { background-color: rgb(220, 252, 231); color: rgb(22, 101, 52); }
+    .badge-unpaid { background-color: rgb(254, 243, 199); color: rgb(146, 64, 14); }
+
+    /* === REN A4-UTSKRIFTSLAYOUT === */
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      body { background: white; padding: 0; margin: 0; }
+      .no-print { display: none !important; }
+      .app-container { display: block; max-width: 100%; }
+      .panel { box-shadow: none; padding: 0; border-radius: 0; }
+      .invoice-paper { border: none; padding: 0; min-height: 268mm; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loveToast" class="love-toast no-print">Mattias Love you forever ❤️</div>
+
+  <div class="app-container">
+    <div class="panel no-print">
+      <div class="top-bar">
+        <h2 data-i18n="createInvoice">Create Invoice</h2>
+        <div class="top-controls">
+          <button type="button" id="installAppBtn" class="install-btn" onclick="installPwaApp()" data-i18n="installBtn">📲 Install App</button>
+          <select id="langSelect" class="compact-select" onchange="changeLanguage(this.value, true)" aria-label="Language">
+            <option value="en">🇳🇬 English (Nigeria)</option>
+            <option value="sv">🇸🇪 Svenska</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="ja">🇯🇵 日本語</option>
+            <option value="zh">🇨🇳 中文</option>
+            <option value="ko">🇰🇷 한국어</option>
+          </select>
+          <select id="currencySelect" class="compact-select" onchange="changeCurrency(this.value)" aria-label="Currency">
+            <option value="NGN">₦ (NGN)</option>
+            <option value="USD">$ (USD)</option>
+            <option value="EUR">€ (EUR)</option>
+            <option value="SEK">kr (SEK)</option>
+            <option value="JPY">¥ (JPY)</option>
+            <option value="CNY">¥ (CNY)</option>
+            <option value="KRW">₩ (KRW)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="senderSelect" data-i18n="selectSender">Select saved sender:</label>
+        <select id="senderSelect" onchange="loadSenderProfile()"></select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="senderName">Sender (Name / Business)</label>
+          <input type="text" id="senderName" data-i18n-placeholder="senderNamePh" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label data-i18n="senderOrg">TIN / Reg. No (VAT)</label>
+          <input type="text" id="senderOrg" placeholder="TIN / RC Number" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="senderAddress">Sender Address</label>
+          <input type="text" id="senderAddress" data-i18n-placeholder="senderAddressPh" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label data-i18n="senderPayment">Local Account (NUBAN / Bankgiro)</label>
+          <input type="text" id="senderPayment" placeholder="0123456789" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <div class="form-row-3">
+        <div class="form-group">
+          <label data-i18n="bankName">Bank Name</label>
+          <input type="text" id="senderBank" placeholder="GTBank / Access Bank" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label data-i18n="ibanLabel">IBAN (International)</label>
+          <input type="text" id="senderIban" placeholder="Optional for international" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label data-i18n="bicLabel">BIC / SWIFT</label>
+          <input type="text" id="senderBic" placeholder="GTBINGLA" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label data-i18n="termsLabel">Invoice Terms / Tax Note</label>
+        <input type="text" id="senderTerms" data-i18n-placeholder="termsPh" oninput="updatePreview()">
+      </div>
+
+      <div class="form-row" style="align-items:end">
+        <div class="form-group" style="margin-bottom:0">
+          <label data-i18n="logoLabel">Business Logo (optional, max 250 KB)</label>
+          <input type="file" id="logoUpload" accept="image/*" onchange="handleLogoUpload(event)">
+        </div>
+        <div>
+          <button type="button" class="secondary" onclick="saveSenderProfile()" data-i18n="saveSenderBtn">Save sender &amp; logo</button>
+          <button type="button" class="danger" onclick="clearLogo()" data-i18n="clearLogoBtn">Remove logo</button>
+        </div>
+      </div>
+
+      <hr style="margin:20px 0;border:0;border-top:1px solid rgb(203,213,225)">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="docType">Document Title</label>
+          <select id="invoiceType" onchange="updatePreview()">
+            <option value="INVOICE" selected data-i18n="typeInvoice">INVOICE</option>
+            <option value="REMINDER" data-i18n="typeReminder">PAYMENT REMINDER</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="invoiceNumber">Invoice Number</label>
+          <input type="text" id="invoiceNumber" value="1001" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="invoiceDate">Invoice Date</label>
+          <input type="date" id="invoiceDate" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label data-i18n="dueDate">Due Date</label>
+          <input type="date" id="dueDate" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="clientSelect" data-i18n="selectClient">Select saved client:</label>
+        <div style="display:flex;gap:8px">
+          <select id="clientSelect" onchange="loadClientProfile()"></select>
+          <button type="button" class="secondary" style="margin-top:0;white-space:nowrap" onclick="saveClientProfile()" data-i18n="saveClientBtn">Save client</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="clientName">Client Name / Company</label>
+          <input type="text" id="clientName" data-i18n-placeholder="clientNamePh" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label data-i18n="vatLabel">VAT (%)</label>
+          <select id="vatRate" onchange="updatePreview()"></select>
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="reverseChargeCheck" onchange="toggleReverseCharge()">
+        <label for="reverseChargeCheck" data-i18n="reverseChargeLabel">Export / VAT Exempt (0 %)</label>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="clientAddress">Client Address / Email</label>
+          <input type="text" id="clientAddress" data-i18n-placeholder="clientAddressPh" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label data-i18n="clientPhone">Client WhatsApp / Phone (optional)</label>
+          <input type="tel" id="clientPhone" data-i18n-placeholder="clientPhonePh" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <h3 data-i18n="specification">Items</h3>
+      <div id="itemsContainer"></div>
+      <button type="button" class="secondary" onclick="addItemRow()" data-i18n="addRowBtn">+ Add item</button>
+
+      <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
+        <button type="button" onclick="saveInvoiceToHistory()" data-i18n="saveHistoryBtn">Save invoice to history</button>
+        <button type="button" onclick="printInvoice()" data-i18n="printBtn">Print / Save as PDF</button>
+        <button type="button" class="whatsapp" onclick="shareOnWhatsApp()" data-i18n="whatsappBtn">💬 Send via WhatsApp</button>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:30px;border-bottom:1px solid rgb(203,213,225);padding-bottom:8px">
+        <h3 style="margin:0;border:none;padding:0" data-i18n="historyTitle">Saved Invoice History</h3>
+        <button type="button" class="secondary small" onclick="exportHistoryToCSV()" data-i18n="exportCsvBtn">Export CSV (Excel)</button>
+      </div>
+      <ul id="historyList" class="history-list"></ul>
+
+      <div style="margin-top:24px;padding-top:16px;border-top:1px solid rgb(203,213,225)">
+        <h3 style="border:none;margin-bottom:8px" data-i18n="backupTitle">Backup (All Data)</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button type="button" class="secondary small" onclick="exportFullBackup()" data-i18n="exportBackupBtn">Download backup (.json)</button>
+          <label style="background-color:rgb(100,116,139);color:white;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:0.8rem;margin-top:4px;display:inline-block">
+            <span data-i18n="importBackupBtn">Restore backup (.json)</span>
+            <input type="file" accept=".json" style="display:none" onchange="importFullBackup(event)">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="invoice-paper" id="invoicePreview">
+        <div>
+          <div class="invoice-header">
+            <div>
+              <img id="prevLogo" class="invoice-logo" alt="Logo">
+              <h1 class="invoice-title" id="prevInvoiceType">INVOICE</h1>
+              <p id="prevSenderName" style="font-weight:bold;margin:8px 0 2px 0">Princess</p>
+              <p id="prevSenderAddress" style="margin:0;font-size:0.9rem">Address</p>
+            </div>
+            <div style="text-align:right;font-size:0.92rem">
+              <p style="margin:2px 0"><strong data-i18n="prevInvNo">Invoice No:</strong> <span id="prevInvoiceNumber">1001</span></p>
+              <p style="margin:2px 0"><strong data-i18n="prevOcr">Reference:</strong> <span id="prevOcrNumber" class="mono">-</span></p>
+              <p style="margin:2px 0"><strong data-i18n="prevInvDate">Invoice Date:</strong> <span id="prevInvoiceDate"></span></p>
+              <p style="margin:2px 0"><strong data-i18n="prevDueDate">Due Date:</strong> <span id="prevDueDate"></span></p>
+            </div>
+          </div>
+
+          <div class="invoice-addresses">
+            <div>
+              <strong data-i18n="prevRecipient">Bill To:</strong>
+              <p id="prevClientName" style="margin:4px 0 2px 0;font-weight:600">Client Name</p>
+              <p id="prevClientAddress" style="margin:0;font-size:0.9rem">Client Address</p>
+              <p id="prevClientPhone" style="margin:2px 0 0 0;font-size:0.88rem;color:var(--muted)"></p>
+            </div>
+          </div>
+
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th data-i18n="colDesc">Description</th>
+                <th class="num" data-i18n="colQty">Qty</th>
+                <th class="num" data-i18n="colPrice">Unit Price</th>
+                <th class="num" data-i18n="colSum">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="prevItemsBody"></tbody>
+          </table>
+
+          <div class="invoice-totals">
+            <div class="totals-row">
+              <span data-i18n="prevNet">Subtotal:</span>
+              <span id="prevNetTotal">₦0.00</span>
+            </div>
+            <div class="totals-row">
+              <span><span data-i18n="prevVat">VAT</span> (<span id="prevVatRate">7.5</span> %):</span>
+              <span id="prevVatAmount">₦0.00</span>
+            </div>
+            <div class="totals-row grand-total">
+              <span data-i18n="prevTotal">Total Due:</span>
+              <span id="prevGrandTotal">₦0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="tax-note-box" id="prevTaxNote"></div>
+          <div class="terms-box" id="prevTermsBox"></div>
+
+          <div class="payment-box" id="prevPaymentBox">
+            <p class="payment-box-title" data-i18n="paymentInstructions">Payment Instructions</p>
+            <div class="payment-grid">
+              <div class="payment-item" id="rowLocalPayment">
+                <strong data-i18n="localPayLabel">Account No:</strong> <span id="prevLocalPayment">-</span>
+              </div>
+              <div class="payment-item">
+                <strong data-i18n="paymentRefLabel">Payment Reference:</strong> <span id="prevPayRef" class="mono">-</span>
+              </div>
+              <div class="payment-item" id="rowBankName" style="display:none">
+                <strong data-i18n="bankName">Bank Name:</strong> <span id="prevBankName"></span>
+              </div>
+              <div class="payment-item" id="rowIban" style="display:none">
+                <strong>IBAN:</strong> <span id="prevIban" class="mono"></span>
+              </div>
+              <div class="payment-item" id="rowBic" style="display:none">
+                <strong>BIC / SWIFT:</strong> <span id="prevBic" class="mono"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="invoice-footer">
+            <div>
+              <strong data-i18n="footerSender">From:</strong> <span id="prevFooterName">-</span><br>
+              <strong data-i18n="footerOrg">TIN / VAT:</strong> <span id="prevFooterOrg">-</span>
+            </div>
+            <div style="text-align:right">
+              <strong data-i18n="prevDueDate">Due Date:</strong> <span id="prevFooterDue">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === KONFIGURATION & VARIABLER ATT JUSTERA ===
+    var APP_NAME = 'Princess Invoice Pro';
+    var APP_SHORT_NAME = 'Princess Invoice';
+    var APP_THEME_COLOR = '#2563eb';
+    var DEFAULT_LANG = 'en';
+    var DEFAULT_CURRENCY = 'NGN';
+    var DEFAULT_COUNTRY_CODE = '234'; // Nigeria (+234) för lokala nummer som börjar på 0
+    var LOVE_MESSAGE = 'Mattias Love you forever ❤️';
+    var LOVE_DURATION_MS = 4000;
+    var AUTO_SWITCH_CURRENCY_ON_LANG = true;
+    var DEFAULT_PAYMENT_DAYS = 14;
+    var REMINDER_DAYS = 7;
+    var REMINDER_FEE = 0;
+    var CSV_SEPARATOR = ';';
+
+    var STORAGE_KEYS = {
+      SENDERS: 'faktura_app_senders_v2',
+      CLIENTS: 'faktura_app_clients_v2',
+      HISTORY: 'faktura_app_history_v2',
+      LANG: 'faktura_app_lang_v2',
+      CURRENCY: 'faktura_app_currency_v2'
+    };
+
+    var TAX_RATES_BY_LANG = {
+      en: [7.5, 0],
+      sv: [25, 12, 6, 0],
+      de: [19, 7, 0],
+      es: [21, 10, 4, 0],
+      fr: [20, 10, 5.5, 0],
+      ja: [10, 8, 0],
+      zh: [13, 9, 6, 0],
+      ko: [10, 0]
+    };
+
+    var CURRENCIES = {
+      NGN: { symbol: '₦',  decimals: 2, position: 'before' },
+      USD: { symbol: '$',  decimals: 2, position: 'before' },
+      EUR: { symbol: '€',  decimals: 2, position: 'after' },
+      SEK: { symbol: 'kr', decimals: 2, position: 'after' },
+      JPY: { symbol: '¥',  decimals: 0, position: 'before' },
+      CNY: { symbol: '¥',  decimals: 2, position: 'before' },
+      KRW: { symbol: '₩',  decimals: 0, position: 'before' }
+    };
+
+    var LANG_TO_CURRENCY = {
+      en: 'NGN', sv: 'SEK', de: 'EUR', es: 'EUR', fr: 'EUR', ja: 'JPY', zh: 'CNY', ko: 'KRW'
+    };
+
+    // === ORDLISTA FÖR ALLA 8 SPRÅK ===
+    var TRANSLATIONS = {
+      en: {
+        locale: 'en-NG',
+        installBtn: '📲 Install App',
+        installGuide: 'To install on your phone:\n\n• iPhone/iPad (Safari): Tap the Share icon and choose "Add to Home Screen".\n• Android (Chrome): Tap the menu (⋮) and choose "Add to Home screen" or "Install app".',
+        createInvoice: 'Create Invoice',
+        selectSender: 'Select saved sender:',
+        selectSenderOpt: '-- Select saved sender --',
+        senderName: 'Sender (Name / Business)',
+        senderNamePh: 'Princess Enterprises',
+        senderOrg: 'TIN / RC Number',
+        senderAddress: 'Sender Address',
+        senderAddressPh: 'Victoria Island, Lagos, Nigeria',
+        senderPayment: 'Bank Account No. (NUBAN)',
+        bankName: 'Bank Name',
+        ibanLabel: 'IBAN (International)',
+        bicLabel: 'BIC / SWIFT',
+        termsLabel: 'Invoice Terms / Notes',
+        termsPh: 'Thank you for your business! Payment due within 14 days.',
+        reverseChargeLabel: 'Export / VAT Exempt (0 %)',
+        reverseChargeNote: 'VAT Exempt / Zero-rated export (0 % VAT).',
+        vatStandard: 'Nigeria VAT',
+        vatExempt: 'Exempt',
+        paymentInstructions: 'Payment Instructions',
+        localPayLabel: 'Account No:',
+        paymentRefLabel: 'Payment Reference:',
+        logoLabel: 'Business Logo (optional, max 250 KB)',
+        saveSenderBtn: 'Save sender & logo',
+        clearLogoBtn: 'Remove logo',
+        docType: 'Document Title',
+        typeInvoice: 'INVOICE',
+        typeReminder: 'PAYMENT REMINDER',
+        invoiceNumber: 'Invoice Number',
+        invoiceDate: 'Invoice Date',
+        dueDate: 'Due Date',
+        selectClient: 'Select saved client:',
+        selectClientOpt: '-- Select saved client --',
+        saveClientBtn: 'Save client',
+        clientName: 'Client Name / Company',
+        clientNamePh: 'Client Ltd',
+        vatLabel: 'VAT (%)',
+        clientAddress: 'Client Address / Email',
+        clientAddressPh: 'Abuja, Nigeria',
+        clientPhone: 'Client WhatsApp / Phone (optional)',
+        clientPhonePh: 'e.g. 0801 234 5678',
+        specification: 'Items',
+        addRowBtn: '+ Add item',
+        saveHistoryBtn: 'Save invoice to history',
+        printBtn: 'Print / Save as PDF',
+        whatsappBtn: '💬 Send via WhatsApp',
+        historyTitle: 'Saved Invoice History',
+        exportCsvBtn: 'Export CSV (Excel)',
+        backupTitle: 'Backup (All Data)',
+        exportBackupBtn: 'Download backup (.json)',
+        importBackupBtn: 'Restore backup (.json)',
+        prevInvNo: 'Invoice No:',
+        prevOcr: 'Reference:',
+        prevInvDate: 'Invoice Date:',
+        prevDueDate: 'Due Date:',
+        prevRecipient: 'Bill To:',
+        colDesc: 'Description',
+        colQty: 'Qty',
+        colPrice: 'Unit Price',
+        colSum: 'Amount',
+        prevNet: 'Subtotal:',
+        prevVat: 'VAT',
+        prevTotal: 'Total Due:',
+        footerSender: 'From:',
+        footerOrg: 'TIN / RC:',
+        defaultSender: 'Princess',
+        defaultAddress: 'Lagos, Nigeria',
+        defaultClient: 'Client Name',
+        defaultClientAddr: 'Client Address',
+        defaultItemDesc: 'Services / Products',
+        itemDescPh: 'e.g. Consulting or Products',
+        reminderFeeDesc: 'Late Payment Fee',
+        noHistory: 'No saved invoices yet.',
+        paid: 'Paid',
+        unpaid: 'Unpaid',
+        markPaid: 'Mark Paid',
+        markUnpaid: 'Mark Unpaid',
+        loadBtn: 'Load',
+        reminderBtn: 'Reminder',
+        deleteBtn: 'Delete',
+        unknownClient: 'Unknown client',
+        dueLabel: 'Due:',
+        alertLogoBig: 'Image is larger than 250 KB. Please choose a smaller image.',
+        alertNeedSender: 'Please enter a sender name before saving.',
+        alertSenderSaved: 'Sender profile and logo saved!',
+        alertNeedClient: 'Please enter a client name before saving.',
+        alertClientSaved: 'Client saved!',
+        alertReminderLoaded: 'Payment reminder loaded.',
+        alertNoCsv: 'No saved invoices to export yet.',
+        alertBadBackup: 'File does not look like a valid backup.',
+        alertBackupRestored: 'Backup restored successfully!',
+        alertBadJson: 'Could not read the JSON file.'
+      },
+      sv: {
+        locale: 'sv-SE', installBtn: '📲 Installera app',
+        installGuide: 'Så lägger du appen på hemskärmen:\n\n• iPhone/iPad (Safari): Tryck på Dela-ikonen och välj "Lägg till på hemskärmen".\n• Android (Chrome): Tryck på menyn (⋮) och välj "Installera app" eller "Lägg till på startskärmen".',
+        createInvoice: 'Skapa Faktura', selectSender: 'Välj sparad vän (Avsändare):',
+        selectSenderOpt: '-- Välj sparad vän --', senderName: 'Avsändare (Namn / Företag)', senderNamePh: 'T.ex. Annas Design AB',
+        senderOrg: 'Org.nr / Momsreg.nr (VAT)', senderAddress: 'Avsändarens adress', senderAddressPh: 'Storgatan 1, 111 22 Stockholm',
+        senderPayment: 'Lokal betalning (Bankgiro / Swish)', bankName: 'Banknamn', ibanLabel: 'IBAN (Internationellt)',
+        bicLabel: 'BIC / SWIFT', termsLabel: 'Fakturavillkor / Skatteinfo (t.ex. F-skatt)', termsPh: 'Godkänd för F-skatt.',
+        reverseChargeLabel: 'Omvänd skattskyldighet / Export (0 % moms)', reverseChargeNote: 'Omvänd skattskyldighet / Export – 0 % moms.',
+        vatStandard: 'Standard', vatExempt: 'Momsfritt', paymentInstructions: 'Betalningsinstruktioner', localPayLabel: 'Lokal betalning:',
+        paymentRefLabel: 'Betalningsreferens:', logoLabel: 'Företagslogotyp (valfritt, max 250 KB)', saveSenderBtn: 'Spara vän & logotyp',
+        clearLogoBtn: 'Ta bort logga', docType: 'Dokumentrubrik', typeInvoice: 'FAKTURA', typeReminder: 'BETALNINGSPÅMINNELSE',
+        invoiceNumber: 'Fakturanummer', invoiceDate: 'Fakturadatum', dueDate: 'Förfallodatum', selectClient: 'Välj sparad kund:',
+        selectClientOpt: '-- Välj sparad kund --', saveClientBtn: 'Spara kund', clientName: 'Kundens namn / företag', clientNamePh: 'Kund AB',
+        vatLabel: 'Moms (%)', clientAddress: 'Kundens adress / e-post', clientAddressPh: 'Kundgatan 5, Malmö',
+        clientPhone: 'Kundens WhatsApp / Telefon (valfritt)', clientPhonePh: 'T.ex. +46 70 123 45 67', specification: 'Specifikation',
+        addRowBtn: '+ Lägg till rad', saveHistoryBtn: 'Spara faktura i historik', printBtn: 'Skriv ut / Spara som PDF',
+        whatsappBtn: '💬 Skicka via WhatsApp', historyTitle: 'Sparad fakturahistorik', exportCsvBtn: 'Exportera CSV (Excel)',
+        backupTitle: 'Säkerhetskopiering (Alla data)', exportBackupBtn: 'Ladda ner backup (.json)', importBackupBtn: 'Återställ från backup (.json)',
+        prevInvNo: 'Fakturanr:', prevOcr: 'OCR-nummer:', prevInvDate: 'Fakturadatum:', prevDueDate: 'Förfallodatum:', prevRecipient: 'Fakturamottagare:',
+        colDesc: 'Beskrivning', colQty: 'Antal', colPrice: 'À-pris', colSum: 'Summa', prevNet: 'Netto (exkl. moms):', prevVat: 'Moms',
+        prevTotal: 'Att betala:', footerSender: 'Avsändare:', footerOrg: 'Org.nr / VAT:', defaultSender: 'Avsändare', defaultAddress: 'Adress',
+        defaultClient: 'Kundens namn', defaultClientAddr: 'Kundens adress', defaultItemDesc: 'Konsulttjänst / Arbete', itemDescPh: 'T.ex. Webbutveckling',
+        reminderFeeDesc: 'Påminnelseavgift', noHistory: 'Inga sparade fakturor ännu.', paid: 'Betald', unpaid: 'Obetald',
+        markPaid: 'Markera betald', markUnpaid: 'Markera obetald', loadBtn: 'Ladda', reminderBtn: 'Påminnelse', deleteBtn: 'Ta bort',
+        unknownClient: 'Okänd kund', dueLabel: 'Förfaller:', alertLogoBig: 'Bilden är större än 250 KB.', alertNeedSender: 'Fyll i ett namn på avsändaren.',
+        alertSenderSaved: 'Profil och logotyp har sparats!', alertNeedClient: 'Fyll i kundens namn.', alertClientSaved: 'Kunden har sparats!',
+        alertReminderLoaded: 'Betalningspåminnelse har laddats in.', alertNoCsv: 'Inga sparade fakturor att exportera.',
+        alertBadBackup: 'Ogiltig säkerhetskopia.', alertBackupRestored: 'Säkerhetskopian har återställts!', alertBadJson: 'Kunde inte läsa JSON-filen.'
+      },
+      de: {
+        locale: 'de-DE', installBtn: '📲 App installieren', installGuide: 'Im Browser-Menü "Zum Startbildschirm hinzufügen" wählen.',
+        createInvoice: 'Rechnung erstellen', selectSender: 'Absender wählen:', selectSenderOpt: '-- Absender wählen --',
+        senderName: 'Absender', senderNamePh: 'Muster GmbH', senderOrg: 'USt-IdNr.', senderAddress: 'Adresse', senderAddressPh: 'Berlin',
+        senderPayment: 'Konto', bankName: 'Bankname', ibanLabel: 'IBAN', bicLabel: 'BIC / SWIFT', termsLabel: 'Bedingungen',
+        termsPh: 'Zahlbar innerhalb von 14 Tagen.', reverseChargeLabel: 'Reverse Charge / Export (0 %)', reverseChargeNote: 'Steuerfreier Export (0 %).',
+        vatStandard: 'Standard', vatExempt: 'Steuerfrei', paymentInstructions: 'Zahlungsanweisungen', localPayLabel: 'Konto:',
+        paymentRefLabel: 'Verwendungszweck:', logoLabel: 'Logo (max. 250 KB)', saveSenderBtn: 'Speichern', clearLogoBtn: 'Entfernen',
+        docType: 'Dokument', typeInvoice: 'RECHNUNG', typeReminder: 'MAHNUNG', invoiceNumber: 'Rechnungsnr.', invoiceDate: 'Datum',
+        dueDate: 'Fällig am', selectClient: 'Kunde wählen:', selectClientOpt: '-- Kunde wählen --', saveClientBtn: 'Speichern',
+        clientName: 'Kunde', clientNamePh: 'Kunde GmbH', vatLabel: 'MwSt. (%)', clientAddress: 'Kundenadresse', clientAddressPh: 'München',
+        clientPhone: 'WhatsApp / Telefon', clientPhonePh: '+49 170 1234567', specification: 'Positionen', addRowBtn: '+ Position',
+        saveHistoryBtn: 'Speichern', printBtn: 'Drucken / PDF', whatsappBtn: '💬 Per WhatsApp senden', historyTitle: 'Verlauf',
+        exportCsvBtn: 'CSV', backupTitle: 'Backup', exportBackupBtn: 'Backup (.json)', importBackupBtn: 'Wiederherstellen',
+        prevInvNo: 'Rechnungsnr.:', prevOcr: 'Referenz:', prevInvDate: 'Datum:', prevDueDate: 'Fällig:', prevRecipient: 'Empfänger:',
+        colDesc: 'Beschreibung', colQty: 'Menge', colPrice: 'Preis', colSum: 'Betrag', prevNet: 'Netto:', prevVat: 'MwSt.', prevTotal: 'Gesamt:',
+        footerSender: 'Absender:', footerOrg: 'USt-IdNr.:', defaultSender: 'Absender', defaultAddress: 'Adresse', defaultClient: 'Kunde',
+        defaultClientAddr: 'Adresse', defaultItemDesc: 'Dienstleistung', itemDescPh: 'Beschreibung', reminderFeeDesc: 'Mahngebühr',
+        noHistory: 'Keine Rechnungen.', paid: 'Bezahlt', unpaid: 'Unbezahlt', markPaid: 'Bezahlt', markUnpaid: 'Unbezahlt', loadBtn: 'Laden',
+        reminderBtn: 'Mahnung', deleteBtn: 'Löschen', unknownClient: 'Unbekannt', dueLabel: 'Fällig:', alertLogoBig: 'Max 250 KB.',
+        alertNeedSender: 'Absender fehlt.', alertSenderSaved: 'Gespeichert!', alertNeedClient: 'Kunde fehlt.', alertClientSaved: 'Gespeichert!',
+        alertReminderLoaded: 'Mahnung geladen.', alertNoCsv: 'Keine Daten.', alertBadBackup: 'Ungültig.', alertBackupRestored: 'Wiederhergestellt!', alertBadJson: 'JSON-Fehler.'
+      },
+      es: {
+        locale: 'es-ES', installBtn: '📲 Instalar App', installGuide: 'Usa el menú del navegador y elige "Añadir a pantalla de inicio".',
+        createInvoice: 'Crear Factura', selectSender: 'Emisor:', selectSenderOpt: '-- Emisor --',
+        senderName: 'Emisor', senderNamePh: 'Empresa S.L.', senderOrg: 'NIF / VAT', senderAddress: 'Dirección', senderAddressPh: 'Madrid',
+        senderPayment: 'Cuenta', bankName: 'Banco', ibanLabel: 'IBAN', bicLabel: 'BIC / SWIFT', termsLabel: 'Condiciones',
+        termsPh: 'Pago a 14 días.', reverseChargeLabel: 'Exportación (0 % IVA)', reverseChargeNote: 'Exento de IVA (0 %).',
+        vatStandard: 'General', vatExempt: 'Exento', paymentInstructions: 'Instrucciones de pago', localPayLabel: 'Cuenta:',
+        paymentRefLabel: 'Referencia:', logoLabel: 'Logo (máx 250 KB)', saveSenderBtn: 'Guardar', clearLogoBtn: 'Quitar',
+        docType: 'Documento', typeInvoice: 'FACTURA', typeReminder: 'RECORDATORIO', invoiceNumber: 'Número', invoiceDate: 'Fecha',
+        dueDate: 'Vencimiento', selectClient: 'Cliente:', selectClientOpt: '-- Cliente --', saveClientBtn: 'Guardar',
+        clientName: 'Cliente', clientNamePh: 'Cliente S.L.', vatLabel: 'IVA (%)', clientAddress: 'Dirección', clientAddressPh: 'Barcelona',
+        clientPhone: 'WhatsApp / Teléfono', clientPhonePh: '+34 600 123 456', specification: 'Conceptos', addRowBtn: '+ Línea',
+        saveHistoryBtn: 'Guardar', printBtn: 'Imprimir / PDF', whatsappBtn: '💬 Enviar por WhatsApp', historyTitle: 'Historial',
+        exportCsvBtn: 'CSV', backupTitle: 'Backup', exportBackupBtn: 'Descargar (.json)', importBackupBtn: 'Restaurar',
+        prevInvNo: 'Factura:', prevOcr: 'Ref:', prevInvDate: 'Fecha:', prevDueDate: 'Vence:', prevRecipient: 'Cliente:',
+        colDesc: 'Descripción', colQty: 'Cant.', colPrice: 'Precio', colSum: 'Total', prevNet: 'Base:', prevVat: 'IVA', prevTotal: 'Total:',
+        footerSender: 'Emisor:', footerOrg: 'NIF:', defaultSender: 'Emisor', defaultAddress: 'Dirección', defaultClient: 'Cliente',
+        defaultClientAddr: 'Dirección', defaultItemDesc: 'Servicios', itemDescPh: 'Descripción', reminderFeeDesc: 'Recargo',
+        noHistory: 'Sin facturas.', paid: 'Pagada', unpaid: 'Pendiente', markPaid: 'Pagada', markUnpaid: 'Pendiente', loadBtn: 'Cargar',
+        reminderBtn: 'Recordatorio', deleteBtn: 'Eliminar', unknownClient: 'Desconocido', dueLabel: 'Vence:', alertLogoBig: 'Máx 250 KB.',
+        alertNeedSender: 'Falta emisor.', alertSenderSaved: 'Guardado!', alertNeedClient: 'Falta cliente.', alertClientSaved: 'Guardado!',
+        alertReminderLoaded: 'Cargado.', alertNoCsv: 'Sin datos.', alertBadBackup: 'Inválido.', alertBackupRestored: 'Restaurado!', alertBadJson: 'Error JSON.'
+      },
+      fr: {
+        locale: 'fr-FR', installBtn: '📲 Installer', installGuide: 'Ouvrez le menu du navigateur et choisissez "Sur l’écran d’accueil".',
+        createInvoice: 'Créer Facture', selectSender: 'Émetteur:', selectSenderOpt: '-- Émetteur --',
+        senderName: 'Émetteur', senderNamePh: 'Studio SAS', senderOrg: 'SIRET / TVA', senderAddress: 'Adresse', senderAddressPh: 'Paris',
+        senderPayment: 'Compte', bankName: 'Banque', ibanLabel: 'IBAN', bicLabel: 'BIC / SWIFT', termsLabel: 'Conditions',
+        termsPh: 'Paiement à 14 jours.', reverseChargeLabel: 'Exportation (0 % TVA)', reverseChargeNote: 'TVA non applicable (0 %).',
+        vatStandard: 'Normal', vatExempt: 'Exonéré', paymentInstructions: 'Instructions de paiement', localPayLabel: 'Compte:',
+        paymentRefLabel: 'Référence:', logoLabel: 'Logo (max 250 Ko)', saveSenderBtn: 'Enregistrer', clearLogoBtn: 'Supprimer',
+        docType: 'Document', typeInvoice: 'FACTURE', typeReminder: 'RAPPEL', invoiceNumber: 'Numéro', invoiceDate: 'Date',
+        dueDate: 'Échéance', selectClient: 'Client:', selectClientOpt: '-- Client --', saveClientBtn: 'Enregistrer',
+        clientName: 'Client', clientNamePh: 'Client SARL', vatLabel: 'TVA (%)', clientAddress: 'Adresse', clientAddressPh: 'Lyon',
+        clientPhone: 'WhatsApp / Téléphone', clientPhonePh: '+33 6 12 34 56 78', specification: 'Détails', addRowBtn: '+ Ligne',
+        saveHistoryBtn: 'Enregistrer', printBtn: 'Imprimer / PDF', whatsappBtn: '💬 Envoyer via WhatsApp', historyTitle: 'Historique',
+        exportCsvBtn: 'CSV', backupTitle: 'Sauvegarde', exportBackupBtn: 'Sauvegarde (.json)', importBackupBtn: 'Restaurer',
+        prevInvNo: 'Facture:', prevOcr: 'Réf:', prevInvDate: 'Date:', prevDueDate: 'Échéance:', prevRecipient: 'Client:',
+        colDesc: 'Description', colQty: 'Qté', colPrice: 'Prix', colSum: 'Total', prevNet: 'HT:', prevVat: 'TVA', prevTotal: 'TTC:',
+        footerSender: 'Émetteur:', footerOrg: 'SIRET:', defaultSender: 'Émetteur', defaultAddress: 'Adresse', defaultClient: 'Client',
+        defaultClientAddr: 'Adresse', defaultItemDesc: 'Prestation', itemDescPh: 'Description', reminderFeeDesc: 'Frais',
+        noHistory: 'Aucune facture.', paid: 'Payée', unpaid: 'Impayée', markPaid: 'Payée', markUnpaid: 'Impayée', loadBtn: 'Charger',
+        reminderBtn: 'Rappel', deleteBtn: 'Supprimer', unknownClient: 'Inconnu', dueLabel: 'Échéance:', alertLogoBig: 'Max 250 Ko.',
+        alertNeedSender: 'Nom requis.', alertSenderSaved: 'Enregistré!', alertNeedClient: 'Client requis.', alertClientSaved: 'Enregistré!',
+        alertReminderLoaded: 'Chargé.', alertNoCsv: 'Vide.', alertBadBackup: 'Invalide.', alertBackupRestored: 'Restauré!', alertBadJson: 'Erreur JSON.'
+      },
+      ja: {
+        locale: 'ja-JP', installBtn: '📲 アプリを追加', installGuide: 'ブラウザのメニューから「ホーム画面に追加」を選択してください。',
+        createInvoice: '請求書を作成', selectSender: '発行元:', selectSenderOpt: '-- 発行元 --',
+        senderName: '発行元', senderNamePh: '株式会社デザイン', senderOrg: '登録番号', senderAddress: '住所', senderAddressPh: '東京都',
+        senderPayment: '振込先', bankName: '銀行名', ibanLabel: 'IBAN', bicLabel: 'SWIFT', termsLabel: '備考',
+        termsPh: '14日以内にお振込みください。', reverseChargeLabel: '輸出免税 (0 %)', reverseChargeNote: '輸出免税 (0 %)。',
+        vatStandard: '標準', vatExempt: '免税', paymentInstructions: 'お支払い方法', localPayLabel: '振込先:',
+        paymentRefLabel: '参照番号:', logoLabel: 'ロゴ (250KB)', saveSenderBtn: '保存', clearLogoBtn: '削除',
+        docType: '書類', typeInvoice: '請求書', typeReminder: '督促状', invoiceNumber: '番号', invoiceDate: '発行日',
+        dueDate: '期限', selectClient: '顧客:', selectClientOpt: '-- 顧客 --', saveClientBtn: '保存',
+        clientName: '顧客名', clientNamePh: '株式会社クライアント', vatLabel: '消費税 (%)', clientAddress: '住所', clientAddressPh: '大阪市',
+        clientPhone: 'WhatsApp / 電話番号', clientPhonePh: '+81 90 1234 5678', specification: '明細', addRowBtn: '+ 追加',
+        saveHistoryBtn: '保存', printBtn: '印刷 / PDF', whatsappBtn: '💬 WhatsAppで送信', historyTitle: '履歴',
+        exportCsvBtn: 'CSV', backupTitle: 'バックアップ', exportBackupBtn: '保存 (.json)', importBackupBtn: '復元',
+        prevInvNo: '番号:', prevOcr: '参照:', prevInvDate: '発行日:', prevDueDate: '期限:', prevRecipient: '請求先:',
+        colDesc: '品目', colQty: '数量', colPrice: '単価', colSum: '金額', prevNet: '小計:', prevVat: '消費税', prevTotal: '合計:',
+        footerSender: '発行元:', footerOrg: '登録番号:', defaultSender: '発行元', defaultAddress: '住所', defaultClient: '顧客',
+        defaultClientAddr: '住所', defaultItemDesc: '作業費', itemDescPh: '品目', reminderFeeDesc: '手数料',
+        noHistory: '履歴なし', paid: '支払済', unpaid: '未払い', markPaid: '支払済', markUnpaid: '未払い', loadBtn: '読込',
+        reminderBtn: '督促', deleteBtn: '削除', unknownClient: '不明', dueLabel: '期限:', alertLogoBig: '250KB超過',
+        alertNeedSender: '発行元を入力', alertSenderSaved: '保存しました', alertNeedClient: '顧客を入力', alertClientSaved: '保存しました',
+        alertReminderLoaded: '読込完了', alertNoCsv: 'データなし', alertBadBackup: '無効なファイル', alertBackupRestored: '復元完了', alertBadJson: 'JSONエラー'
+      },
+      zh: {
+        locale: 'zh-CN', installBtn: '📲 安装应用', installGuide: '请在浏览器菜单中选择“添加到主屏幕”。',
+        createInvoice: '创建发票', selectSender: '开票方:', selectSenderOpt: '-- 开票方 --',
+        senderName: '开票方', senderNamePh: '设计有限公司', senderOrg: '税号', senderAddress: '地址', senderAddressPh: '北京市',
+        senderPayment: '收款账号', bankName: '银行', ibanLabel: 'IBAN', bicLabel: 'SWIFT', termsLabel: '备注',
+        termsPh: '请在14天内付款。', reverseChargeLabel: '出口免税 (0 %)', reverseChargeNote: '出口免税 (0 %)。',
+        vatStandard: '标准', vatExempt: '免税', paymentInstructions: '付款说明', localPayLabel: '账号:',
+        paymentRefLabel: '参考号:', logoLabel: '标志 (250KB)', saveSenderBtn: '保存', clearLogoBtn: '删除',
+        docType: '单据', typeInvoice: '发票', typeReminder: '付款提醒', invoiceNumber: '编号', invoiceDate: '日期',
+        dueDate: '到期日', selectClient: '客户:', selectClientOpt: '-- 客户 --', saveClientBtn: '保存',
+        clientName: '客户', clientNamePh: '客户公司', vatLabel: '税率 (%)', clientAddress: '地址', clientAddressPh: '上海市',
+        clientPhone: 'WhatsApp / 电话', clientPhonePh: '+86 138 0000 0000', specification: '明细', addRowBtn: '+ 添加',
+        saveHistoryBtn: '保存', printBtn: '打印 / PDF', whatsappBtn: '💬 通过 WhatsApp 发送', historyTitle: '历史记录',
+        exportCsvBtn: 'CSV', backupTitle: '备份', exportBackupBtn: '下载 (.json)', importBackupBtn: '恢复',
+        prevInvNo: '编号:', prevOcr: '参考:', prevInvDate: '日期:', prevDueDate: '到期:', prevRecipient: '客户:',
+        colDesc: '描述', colQty: '数量', colPrice: '单价', colSum: '金额', prevNet: '小计:', prevVat: '税额', prevTotal: '总额:',
+        footerSender: '开票方:', footerOrg: '税号:', defaultSender: '开票方', defaultAddress: '地址', defaultClient: '客户',
+        defaultClientAddr: '地址', defaultItemDesc: '服务费', itemDescPh: '描述', reminderFeeDesc: '提醒费',
+        noHistory: '暂无记录', paid: '已付', unpaid: '未付', markPaid: '标记已付', markUnpaid: '标记未付', loadBtn: '加载',
+        reminderBtn: '提醒', deleteBtn: '删除', unknownClient: '未知', dueLabel: '到期:', alertLogoBig: '超过250KB',
+        alertNeedSender: '请填写开票方', alertSenderSaved: '已保存', alertNeedClient: '请填写客户', alertClientSaved: '已保存',
+        alertReminderLoaded: '已加载', alertNoCsv: '无数据', alertBadBackup: '无效文件', alertBackupRestored: '已恢复', alertBadJson: 'JSON错误'
+      },
+      ko: {
+        locale: 'ko-KR', installBtn: '📲 앱 설치', installGuide: '브라우저 메뉴에서 "홈 화면에 추가"를 선택하세요.',
+        createInvoice: '청구서 작성', selectSender: '발행인:', selectSenderOpt: '-- 발행인 --',
+        senderName: '발행인', senderNamePh: '디자인 주식회사', senderOrg: '사업자번호', senderAddress: '주소', senderAddressPh: '서울',
+        senderPayment: '계좌번호', bankName: '은행명', ibanLabel: 'IBAN', bicLabel: 'SWIFT', termsLabel: '안내',
+        termsPh: '14일 이내 입금 부탁드립니다.', reverseChargeLabel: '수출 면세 (0 %)', reverseChargeNote: '수출 면세 (0 %).',
+        vatStandard: '기본', vatExempt: '면세', paymentInstructions: '결제 안내', localPayLabel: '계좌:',
+        paymentRefLabel: '참조번호:', logoLabel: '로고 (250KB)', saveSenderBtn: '저장', clearLogoBtn: '삭제',
+        docType: '문서', typeInvoice: '청구서', typeReminder: '독촉장', invoiceNumber: '번호', invoiceDate: '발행일',
+        dueDate: '기한', selectClient: '고객:', selectClientOpt: '-- 고객 --', saveClientBtn: '저장',
+        clientName: '고객', clientNamePh: '고객 주식회사', vatLabel: '부가세 (%)', clientAddress: '주소', clientAddressPh: '부산',
+        clientPhone: 'WhatsApp / 전화번호', clientPhonePh: '+82 10 1234 5678', specification: '내역', addRowBtn: '+ 추가',
+        saveHistoryBtn: '저장', printBtn: '인쇄 / PDF', whatsappBtn: '💬 WhatsApp으로 보내기', historyTitle: '기록',
+        exportCsvBtn: 'CSV', backupTitle: '백업', exportBackupBtn: '백업 (.json)', importBackupBtn: '복원',
+        prevInvNo: '번호:', prevOcr: '참조:', prevInvDate: '발행일:', prevDueDate: '기한:', prevRecipient: '수신:',
+        colDesc: '항목', colQty: '수량', colPrice: '단가', colSum: '금액', prevNet: '소계:', prevVat: '부가세', prevTotal: '합계:',
+        footerSender: '발행인:', footerOrg: '사업자번호:', defaultSender: '발행인', defaultAddress: '주소', defaultClient: '고객',
+        defaultClientAddr: '주소', defaultItemDesc: '서비스', itemDescPh: '항목', reminderFeeDesc: '수수료',
+        noHistory: '기록 없음', paid: '완료', unpaid: '미결제', markPaid: '완료 표시', markUnpaid: '미결제 표시', loadBtn: '불러오기',
+        reminderBtn: '독촉', deleteBtn: '삭제', unknownClient: '알 수 없음', dueLabel: '기한:', alertLogoBig: '250KB 초과',
+        alertNeedSender: '발행인 입력', alertSenderSaved: '저장됨', alertNeedClient: '고객 입력', alertClientSaved: '저장됨',
+        alertReminderLoaded: '불러옴', alertNoCsv: '데이터 없음', alertBadBackup: '잘못된 파일', alertBackupRestored: '복원됨', alertBadJson: 'JSON 오류'
+      }
+    };
+
+    var currentLang = DEFAULT_LANG;
+    var currentCurrency = DEFAULT_CURRENCY;
+    var memStore = {};
+    var currentLogoBase64 = '';
+    var loveTimer = null;
+    var deferredInstallPrompt = null;
+
+    // === PWA-IKON & MANIFEST (RITAD I CANVAS) ===
+    function setupPwaIconAndManifest() {
+      try {
+        var canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        var ctx = canvas.getContext('2d');
+
+        // Blå bakgrund med rundade hörn
+        var grad = ctx.createLinearGradient(0, 0, 512, 512);
+        grad.addColorStop(0, '#2563eb');
+        grad.addColorStop(1, '#1d4ed8');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 512);
+
+        // Vitt fakturapapper i mitten
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.roundRect(126, 86, 260, 340, 26);
+        ctx.fill();
+
+        // Fakturarader
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(166, 150, 140, 20);
+        ctx.fillRect(166, 200, 180, 16);
+        ctx.fillRect(166, 240, 180, 16);
+        ctx.fillRect(166, 280, 120, 16);
+
+        // Rosa hjärta nere till höger på pappret
+        ctx.fillStyle = '#e11d48';
+        ctx.font = 'bold 90px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('❤', 325, 395);
+
+        var iconDataUrl = canvas.toDataURL('image/png');
+        document.getElementById('dynamicFavicon').href = iconDataUrl;
+        document.getElementById('dynamicAppleIcon').href = iconDataUrl;
+
+        var manifest = {
+          name: APP_NAME,
+          short_name: APP_SHORT_NAME,
+          start_url: window.location.href,
+          display: 'standalone',
+          background_color: '#f1f5f9',
+          theme_color: APP_THEME_COLOR,
+          icons: [
+            { src: iconDataUrl, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+          ]
+        };
+
+        var manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+        document.getElementById('dynamicManifest').href = URL.createObjectURL(manifestBlob);
+      } catch (e) {}
+
+      // Dölj installationsknappen om appen redan körs från hemskärmen
+      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (isStandalone) {
+        var btn = document.getElementById('installAppBtn');
+        if (btn) btn.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+    });
+
+    function installPwaApp() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then(function() {
+          deferredInstallPrompt = null;
+        });
+      } else {
+        alert(t('installGuide'));
+      }
+    }
+
+    function showLoveMessage() {
+      var toast = document.getElementById('loveToast');
+      if (!toast) return;
+      toast.innerText = LOVE_MESSAGE;
+      toast.classList.add('show');
+      clearTimeout(loveTimer);
+      loveTimer = setTimeout(function() {
+        toast.classList.remove('show');
+      }, LOVE_DURATION_MS);
+    }
+
+    function printInvoice() {
+      showLoveMessage();
+      setTimeout(function() {
+        window.print();
+      }, 600);
+    }
+
+    function formatWhatsAppPhone(rawPhone) {
+      var digits = String(rawPhone || '').replace(/\D/g, '');
+      if (!digits) return '';
+      if (digits.charAt(0) === '0' && DEFAULT_COUNTRY_CODE) {
+        digits = DEFAULT_COUNTRY_CODE + digits.substring(1);
+      }
+      return digits;
+    }
+
+    function shareOnWhatsApp() {
+      showLoveMessage();
+
+      var docTitle = getTranslatedDocType(document.getElementById('invoiceType').value);
+      var invNum = document.getElementById('invoiceNumber').value || '-';
+      var invDate = document.getElementById('invoiceDate').value || '-';
+      var dueDate = document.getElementById('dueDate').value || '-';
+      var senderName = document.getElementById('senderName').value.trim() || t('defaultSender');
+      var clientName = document.getElementById('clientName').value.trim() || t('defaultClient');
+      var netTotal = document.getElementById('prevNetTotal').innerText;
+      var vatRate = document.getElementById('prevVatRate').innerText;
+      var vatAmount = document.getElementById('prevVatAmount').innerText;
+      var grandTotal = document.getElementById('prevGrandTotal').innerText;
+      var payRef = document.getElementById('prevPayRef').innerText;
+      var localPay = document.getElementById('senderPayment').value.trim();
+      var bankName = document.getElementById('senderBank').value.trim();
+      var iban = document.getElementById('senderIban').value.trim();
+      var bic = document.getElementById('senderBic').value.trim();
+      var terms = document.getElementById('senderTerms').value.trim();
+
+      var lines = [];
+      lines.push('*' + docTitle + ' #' + invNum + '*');
+      lines.push(t('footerSender') + ' ' + senderName);
+      lines.push(t('prevRecipient') + ' ' + clientName);
+      lines.push(t('prevInvDate') + ' ' + invDate);
+      lines.push(t('prevDueDate') + ' ' + dueDate);
+      lines.push('');
+      lines.push('*' + t('specification') + ':*');
+
+      document.querySelectorAll('.item-row').forEach(function(row) {
+        var desc = row.querySelector('.item-desc').value.trim() || '-';
+        var qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+        var price = parseFloat(row.querySelector('.item-price').value) || 0;
+        lines.push('• ' + desc + ' (' + qty + ' x ' + formatMoney(price) + ') = ' + formatMoney(qty * price));
+      });
+
+      lines.push('');
+      lines.push(t('prevNet') + ' ' + netTotal);
+      lines.push(t('prevVat') + ' (' + vatRate + '%): ' + vatAmount);
+      lines.push('*' + t('prevTotal') + ' ' + grandTotal + '*');
+
+      if (localPay || bankName || iban || bic) {
+        lines.push('');
+        lines.push('*' + t('paymentInstructions') + ':*');
+        if (bankName) lines.push(t('bankName') + ': ' + bankName);
+        if (localPay) lines.push(t('localPayLabel') + ' ' + localPay);
+        if (iban) lines.push('IBAN: ' + iban);
+        if (bic) lines.push('BIC/SWIFT: ' + bic);
+        lines.push(t('paymentRefLabel') + ' ' + payRef);
+      }
+
+      if (terms) {
+        lines.push('');
+        lines.push(terms);
+      }
+
+      var phone = formatWhatsAppPhone(document.getElementById('clientPhone').value);
+      var encodedText = encodeURIComponent(lines.join('\n'));
+      var waUrl = phone
+        ? 'https://wa.me/' + phone + '?text=' + encodedText
+        : 'https://wa.me/?text=' + encodedText;
+
+      setTimeout(function() {
+        window.open(waUrl, '_blank');
+      }, 450);
+    }
+
+    function t(key) {
+      return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS[DEFAULT_LANG][key] || key;
+    }
+
+    function getCurrencyConfig() {
+      return CURRENCIES[currentCurrency] || CURRENCIES[DEFAULT_CURRENCY];
+    }
+
+    function getStore(k) {
+      try { return JSON.parse(localStorage.getItem(k)) || []; }
+      catch (e) { return memStore[k] || []; }
+    }
+
+    function setStore(k, v) {
+      memStore[k] = v;
+      try { localStorage.setItem(k, JSON.stringify(v)); }
+      catch (e) {}
+    }
+
+    function renderVatOptions(preferredRate) {
+      var select = document.getElementById('vatRate');
+      var rates = TAX_RATES_BY_LANG[currentLang] || TAX_RATES_BY_LANG[DEFAULT_LANG];
+      select.innerHTML = '';
+
+      rates.forEach(function(rate, idx) {
+        var opt = document.createElement('option');
+        opt.value = String(rate);
+        if (idx === 0) opt.innerText = rate + ' % (' + t('vatStandard') + ')';
+        else if (rate === 0) opt.innerText = '0 % (' + t('vatExempt') + ')';
+        else opt.innerText = rate + ' %';
+        select.appendChild(opt);
+      });
+
+      if (preferredRate !== undefined && preferredRate !== null) {
+        var exists = rates.some(function(r) { return String(r) === String(preferredRate); });
+        if (!exists) {
+          var customOpt = document.createElement('option');
+          customOpt.value = String(preferredRate);
+          customOpt.innerText = preferredRate + ' %';
+          select.appendChild(customOpt);
+        }
+        select.value = String(preferredRate);
+      } else {
+        select.value = String(rates[0]);
+      }
+
+      if (document.getElementById('reverseChargeCheck').checked) {
+        select.value = '0';
+        select.disabled = true;
+      } else {
+        select.disabled = false;
+      }
+    }
+
+    function toggleReverseCharge() {
+      var isChecked = document.getElementById('reverseChargeCheck').checked;
+      var vatSelect = document.getElementById('vatRate');
+      if (isChecked) {
+        vatSelect.value = '0';
+        vatSelect.disabled = true;
+      } else {
+        vatSelect.disabled = false;
+        var rates = TAX_RATES_BY_LANG[currentLang] || TAX_RATES_BY_LANG[DEFAULT_LANG];
+        vatSelect.value = String(rates[0]);
+      }
+      updatePreview();
+    }
+
+    function changeLanguage(lang, syncCurrency) {
+      if (!TRANSLATIONS[lang]) lang = DEFAULT_LANG;
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      try { localStorage.setItem(STORAGE_KEYS.LANG, lang); } catch (e) {}
+
+      if (syncCurrency && AUTO_SWITCH_CURRENCY_ON_LANG && LANG_TO_CURRENCY[lang]) {
+        currentCurrency = LANG_TO_CURRENCY[lang];
+        try { localStorage.setItem(STORAGE_KEYS.CURRENCY, currentCurrency); } catch (e) {}
+      }
+
+      applyLanguageAndCurrency(true);
+    }
+
+    function changeCurrency(currencyCode) {
+      if (!CURRENCIES[currencyCode]) currencyCode = DEFAULT_CURRENCY;
+      currentCurrency = currencyCode;
+      try { localStorage.setItem(STORAGE_KEYS.CURRENCY, currentCurrency); } catch (e) {}
+      applyLanguageAndCurrency(false);
+    }
+
+    function applyLanguageAndCurrency(resetVatToLangDefault) {
+      document.getElementById('langSelect').value = currentLang;
+      document.getElementById('currencySelect').value = currentCurrency;
+
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        el.innerText = t(el.getAttribute('data-i18n'));
+      });
+
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+        el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+      });
+
+      var currentVat = document.getElementById('vatRate').value;
+      renderVatOptions(resetVatToLangDefault ? undefined : currentVat);
+
+      var curSymbol = getCurrencyConfig().symbol;
+      document.querySelectorAll('.item-row').forEach(function(row) {
+        row.querySelector('.lbl-desc').innerText = t('colDesc');
+        row.querySelector('.lbl-qty').innerText = t('colQty');
+        row.querySelector('.lbl-price').innerText = t('colPrice') + ' (' + curSymbol + ')';
+        row.querySelector('.item-desc').placeholder = t('itemDescPh');
+      });
+
+      renderSenderDropdown();
+      renderClientDropdown();
+      renderHistoryList();
+      updatePreview();
+    }
+
+    function setDefaultDates(daysToAdd) {
+      var today = new Date();
+      var due = new Date();
+      due.setDate(today.getDate() + daysToAdd);
+      document.getElementById('invoiceDate').value = today.toISOString().split('T')[0];
+      document.getElementById('dueDate').value = due.toISOString().split('T')[0];
+    }
+
+    function handleLogoUpload(event) {
+      var file = event.target.files[0];
+      if (!file) return;
+      if (file.size > 250 * 1024) {
+        alert(t('alertLogoBig'));
+        event.target.value = '';
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        currentLogoBase64 = e.target.result;
+        updatePreview();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearLogo() {
+      currentLogoBase64 = '';
+      document.getElementById('logoUpload').value = '';
+      updatePreview();
+    }
+
+    function generateOCR(invoiceNumber) {
+      var cleanDigits = String(invoiceNumber).replace(/\D/g, '');
+      if (!cleanDigits) return '-';
+      var totalLength = (cleanDigits.length + 2) % 10;
+      var baseNumber = cleanDigits + totalLength;
+      var sum = 0;
+      var shouldDouble = true;
+      for (var i = baseNumber.length - 1; i >= 0; i--) {
+        var digit = parseInt(baseNumber.charAt(i), 10);
+        if (shouldDouble) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+        shouldDouble = !shouldDouble;
+      }
+      var checkDigit = (10 - (sum % 10)) % 10;
+      return baseNumber + checkDigit;
+    }
+
+    function addItemRow(desc, qty, price) {
+      desc = desc || '';
+      qty = qty || 1;
+      price = (price !== undefined) ? price : 0;
+      var curSymbol = getCurrencyConfig().symbol;
+      var container = document.getElementById('itemsContainer');
+      var row = document.createElement('div');
+      row.className = 'item-row';
+      row.innerHTML =
+        '<div><label class="lbl-desc">' + t('colDesc') + '</label><input type="text" class="item-desc" value="' + desc + '" placeholder="' + t('itemDescPh') + '" oninput="updatePreview()"></div>' +
+        '<div><label class="lbl-qty">' + t('colQty') + '</label><input type="number" class="item-qty" value="' + qty + '" min="1" step="1" oninput="updatePreview()"></div>' +
+        '<div><label class="lbl-price">' + t('colPrice') + ' (' + curSymbol + ')</label><input type="number" class="item-price" value="' + price + '" min="0" step="0.01" oninput="updatePreview()"></div>' +
+        '<button type="button" class="danger" onclick="removeItemRow(this)">X</button>';
+      container.appendChild(row);
+      updatePreview();
+    }
+
+    function removeItemRow(button) {
+      button.parentElement.remove();
+      updatePreview();
+    }
+
+    function formatMoney(amount) {
+      var cfg = getCurrencyConfig();
+      var formatted = amount.toLocaleString(t('locale'), {
+        minimumFractionDigits: cfg.decimals,
+        maximumFractionDigits: cfg.decimals
+      });
+      return cfg.position === 'before'
+        ? cfg.symbol + formatted
+        : formatted + ' ' + cfg.symbol;
+    }
+
+    function getTranslatedDocType(val) {
+      return val === 'REMINDER' || val === 'BETALNINGSPÅMINNELSE' ? t('typeReminder') : t('typeInvoice');
+    }
+
+    function updatePreview() {
+      var logoImg = document.getElementById('prevLogo');
+      if (currentLogoBase64) {
+        logoImg.src = currentLogoBase64;
+        logoImg.style.display = 'block';
+      } else {
+        logoImg.style.display = 'none';
+      }
+
+      document.getElementById('prevInvoiceType').innerText = getTranslatedDocType(document.getElementById('invoiceType').value);
+
+      var senderName = document.getElementById('senderName').value || t('defaultSender');
+      var senderOrg = document.getElementById('senderOrg').value || '-';
+      var senderAddress = document.getElementById('senderAddress').value || t('defaultAddress');
+      var senderPayment = document.getElementById('senderPayment').value.trim();
+      var senderBank = document.getElementById('senderBank').value.trim();
+      var senderIban = document.getElementById('senderIban').value.trim();
+      var senderBic = document.getElementById('senderBic').value.trim();
+      var senderTerms = document.getElementById('senderTerms').value.trim();
+      var isReverseCharge = document.getElementById('reverseChargeCheck').checked;
+
+      document.getElementById('prevSenderName').innerText = senderName;
+      document.getElementById('prevSenderAddress').innerText = senderAddress;
+      document.getElementById('prevFooterName').innerText = senderName;
+      document.getElementById('prevFooterOrg').innerText = senderOrg;
+
+      var invNum = document.getElementById('invoiceNumber').value;
+      var ocr = generateOCR(invNum);
+      var dueDate = document.getElementById('dueDate').value;
+
+      document.getElementById('prevInvoiceNumber').innerText = invNum;
+      document.getElementById('prevOcrNumber').innerText = ocr;
+      document.getElementById('prevInvoiceDate').innerText = document.getElementById('invoiceDate').value;
+      document.getElementById('prevDueDate').innerText = dueDate;
+      document.getElementById('prevFooterDue').innerText = dueDate || '-';
+
+      var taxNoteEl = document.getElementById('prevTaxNote');
+      if (isReverseCharge) {
+        taxNoteEl.innerText = t('reverseChargeNote');
+        taxNoteEl.style.display = 'block';
+      } else {
+        taxNoteEl.style.display = 'none';
+      }
+
+      var termsEl = document.getElementById('prevTermsBox');
+      if (senderTerms) {
+        termsEl.innerText = senderTerms;
+        termsEl.style.display = 'block';
+      } else {
+        termsEl.style.display = 'none';
+      }
+
+      document.getElementById('prevPayRef').innerText = ocr !== '-' ? ocr : (invNum || '-');
+      document.getElementById('rowLocalPayment').style.display = senderPayment ? 'block' : 'none';
+      document.getElementById('prevLocalPayment').innerText = senderPayment;
+
+      document.getElementById('rowBankName').style.display = senderBank ? 'block' : 'none';
+      document.getElementById('prevBankName').innerText = senderBank;
+
+      document.getElementById('rowIban').style.display = senderIban ? 'block' : 'none';
+      document.getElementById('prevIban').innerText = senderIban;
+
+      document.getElementById('rowBic').style.display = senderBic ? 'block' : 'none';
+      document.getElementById('prevBic').innerText = senderBic;
+
+      document.getElementById('prevClientName').innerText = document.getElementById('clientName').value || t('defaultClient');
+      document.getElementById('prevClientAddress').innerText = document.getElementById('clientAddress').value || t('defaultClientAddr');
+      document.getElementById('prevClientPhone').innerText = document.getElementById('clientPhone').value.trim();
+
+      var rows = document.querySelectorAll('.item-row');
+      var tbody = document.getElementById('prevItemsBody');
+      tbody.innerHTML = '';
+      var netTotal = 0;
+
+      rows.forEach(function(row) {
+        var desc = row.querySelector('.item-desc').value || '-';
+        var qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+        var price = parseFloat(row.querySelector('.item-price').value) || 0;
+        var lineTotal = qty * price;
+        netTotal += lineTotal;
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + desc + '</td><td class="num">' + qty + '</td><td class="num">' + formatMoney(price) + '</td><td class="num">' + formatMoney(lineTotal) + '</td>';
+        tbody.appendChild(tr);
+      });
+
+      var vatRate = isReverseCharge ? 0 : (parseFloat(document.getElementById('vatRate').value) || 0);
+      var vatAmount = netTotal * (vatRate / 100);
+      var grandTotal = netTotal + vatAmount;
+
+      document.getElementById('prevVatRate').innerText = vatRate;
+      document.getElementById('prevNetTotal').innerText = formatMoney(netTotal);
+      document.getElementById('prevVatAmount').innerText = formatMoney(vatAmount);
+      document.getElementById('prevGrandTotal').innerText = formatMoney(grandTotal);
+    }
+
+    function saveSenderProfile() {
+      var name = document.getElementById('senderName').value.trim();
+      if (!name) { alert(t('alertNeedSender')); return; }
+      var senders = getStore(STORAGE_KEYS.SENDERS);
+      var profile = {
+        name: name,
+        org: document.getElementById('senderOrg').value,
+        address: document.getElementById('senderAddress').value,
+        payment: document.getElementById('senderPayment').value,
+        bank: document.getElementById('senderBank').value,
+        iban: document.getElementById('senderIban').value,
+        bic: document.getElementById('senderBic').value,
+        terms: document.getElementById('senderTerms').value,
+        logo: currentLogoBase64
+      };
+      var existingIndex = senders.findIndex(function(s) { return s.name === name; });
+      if (existingIndex > -1) senders[existingIndex] = profile;
+      else senders.push(profile);
+      setStore(STORAGE_KEYS.SENDERS, senders);
+      renderSenderDropdown();
+      alert(t('alertSenderSaved'));
+    }
+
+    function renderSenderDropdown() {
+      var senders = getStore(STORAGE_KEYS.SENDERS);
+      var select = document.getElementById('senderSelect');
+      var prevVal = select.value;
+      select.innerHTML = '<option value="">' + t('selectSenderOpt') + '</option>';
+      senders.forEach(function(sender, index) {
+        var option = document.createElement('option');
+        option.value = index;
+        option.innerText = sender.name;
+        select.appendChild(option);
+      });
+      select.value = prevVal;
+    }
+
+    function loadSenderProfile() {
+      var index = document.getElementById('senderSelect').value;
+      if (index === '') return;
+      var sender = getStore(STORAGE_KEYS.SENDERS)[index];
+      if (sender) {
+        document.getElementById('senderName').value = sender.name || '';
+        document.getElementById('senderOrg').value = sender.org || '';
+        document.getElementById('senderAddress').value = sender.address || '';
+        document.getElementById('senderPayment').value = sender.payment || '';
+        document.getElementById('senderBank').value = sender.bank || '';
+        document.getElementById('senderIban').value = sender.iban || '';
+        document.getElementById('senderBic').value = sender.bic || '';
+        document.getElementById('senderTerms').value = sender.terms || '';
+        currentLogoBase64 = sender.logo || '';
+        updatePreview();
+      }
+    }
+
+    function saveClientProfile() {
+      var name = document.getElementById('clientName').value.trim();
+      if (!name) { alert(t('alertNeedClient')); return; }
+      var clients = getStore(STORAGE_KEYS.CLIENTS);
+      var client = {
+        name: name,
+        address: document.getElementById('clientAddress').value,
+        phone: document.getElementById('clientPhone').value
+      };
+      var existingIndex = clients.findIndex(function(c) { return c.name === name; });
+      if (existingIndex > -1) clients[existingIndex] = client;
+      else clients.push(client);
+      setStore(STORAGE_KEYS.CLIENTS, clients);
+      renderClientDropdown();
+      alert(t('alertClientSaved'));
+    }
+
+    function renderClientDropdown() {
+      var clients = getStore(STORAGE_KEYS.CLIENTS);
+      var select = document.getElementById('clientSelect');
+      if (!select) return;
+      var prevVal = select.value;
+      select.innerHTML = '<option value="">' + t('selectClientOpt') + '</option>';
+      clients.forEach(function(client, index) {
+        var option = document.createElement('option');
+        option.value = index;
+        option.innerText = client.name;
+        select.appendChild(option);
+      });
+      select.value = prevVal;
+    }
+
+    function loadClientProfile() {
+      var index = document.getElementById('clientSelect').value;
+      if (index === '') return;
+      var client = getStore(STORAGE_KEYS.CLIENTS)[index];
+      if (client) {
+        document.getElementById('clientName').value = client.name || '';
+        document.getElementById('clientAddress').value = client.address || '';
+        document.getElementById('clientPhone').value = client.phone || '';
+        updatePreview();
+      }
+    }
+
+    function saveInvoiceToHistory() {
+      var history = getStore(STORAGE_KEYS.HISTORY);
+      var items = [];
+      document.querySelectorAll('.item-row').forEach(function(row) {
+        items.push({
+          desc: row.querySelector('.item-desc').value,
+          qty: row.querySelector('.item-qty').value,
+          price: row.querySelector('.item-price').value
+        });
+      });
+      var invoiceData = {
+        id: Date.now(),
+        status: 'unpaid',
+        currency: currentCurrency,
+        reverseCharge: document.getElementById('reverseChargeCheck').checked,
+        invoiceType: document.getElementById('invoiceType').value,
+        invoiceNumber: document.getElementById('invoiceNumber').value,
+        invoiceDate: document.getElementById('invoiceDate').value,
+        dueDate: document.getElementById('dueDate').value,
+        vatRate: document.getElementById('vatRate').value,
+        senderName: document.getElementById('senderName').value,
+        senderOrg: document.getElementById('senderOrg').value,
+        senderAddress: document.getElementById('senderAddress').value,
+        senderPayment: document.getElementById('senderPayment').value,
+        senderBank: document.getElementById('senderBank').value,
+        senderIban: document.getElementById('senderIban').value,
+        senderBic: document.getElementById('senderBic').value,
+        senderTerms: document.getElementById('senderTerms').value,
+        logo: currentLogoBase64,
+        clientName: document.getElementById('clientName').value,
+        clientAddress: document.getElementById('clientAddress').value,
+        clientPhone: document.getElementById('clientPhone').value,
+        totalText: document.getElementById('prevGrandTotal').innerText,
+        items: items
+      };
+      history.unshift(invoiceData);
+      setStore(STORAGE_KEYS.HISTORY, history);
+      renderHistoryList();
+      document.getElementById('invoiceType').value = 'INVOICE';
+      var currentNum = parseInt(document.getElementById('invoiceNumber').value, 10);
+      if (!isNaN(currentNum)) document.getElementById('invoiceNumber').value = currentNum + 1;
+      updatePreview();
+      showLoveMessage();
+    }
+
+    function togglePaymentStatus(index) {
+      var history = getStore(STORAGE_KEYS.HISTORY);
+      if (!history[index]) return;
+      history[index].status = history[index].status === 'paid' ? 'unpaid' : 'paid';
+      setStore(STORAGE_KEYS.HISTORY, history);
+      renderHistoryList();
+    }
+
+    function createReminderFromHistory(index) {
+      loadInvoiceFromHistory(index);
+      document.getElementById('invoiceType').value = 'REMINDER';
+      setDefaultDates(REMINDER_DAYS);
+      if (REMINDER_FEE > 0) addItemRow(t('reminderFeeDesc'), 1, REMINDER_FEE);
+      updatePreview();
+      alert(t('alertReminderLoaded'));
+    }
+
+    function renderHistoryList() {
+      var history = getStore(STORAGE_KEYS.HISTORY);
+      var list = document.getElementById('historyList');
+      list.innerHTML = '';
+      if (history.length === 0) {
+        list.innerHTML = '<li style="color:rgb(100,116,139);font-size:0.9rem">' + t('noHistory') + '</li>';
+        return;
+      }
+      history.forEach(function(inv, index) {
+        var isPaid = inv.status === 'paid';
+        var statusBadge = isPaid
+          ? '<span class="badge badge-paid">' + t('paid') + '</span>'
+          : '<span class="badge badge-unpaid">' + t('unpaid') + '</span>';
+        var li = document.createElement('li');
+        li.className = 'history-item';
+        li.innerHTML =
+          '<div><strong>' + t('typeInvoice') + ' ' + inv.invoiceNumber + '</strong> – ' + (inv.clientName || t('unknownClient')) + ' (' + inv.totalText + ') ' + statusBadge +
+          '<br><small style="color:rgb(100,116,139)">' + t('footerSender') + ' ' + (inv.senderName || '-') + ' | ' + t('dueLabel') + ' ' + inv.dueDate + '</small></div>' +
+          '<div style="display:flex;gap:4px;flex-wrap:wrap">' +
+            '<button type="button" class="' + (isPaid ? 'secondary' : 'success') + '" onclick="togglePaymentStatus(' + index + ')">' + (isPaid ? t('markUnpaid') : t('markPaid')) + '</button>' +
+            '<button type="button" class="secondary small" onclick="loadInvoiceFromHistory(' + index + ')">' + t('loadBtn') + '</button>' +
+            (!isPaid ? '<button type="button" class="warning" onclick="createReminderFromHistory(' + index + ')">' + t('reminderBtn') + '</button>' : '') +
+            '<button type="button" class="danger" onclick="deleteHistoryItem(' + index + ')">' + t('deleteBtn') + '</button>' +
+          '</div>';
+        list.appendChild(li);
+      });
+    }
+
+    function loadInvoiceFromHistory(index) {
+      var inv = getStore(STORAGE_KEYS.HISTORY)[index];
+      if (!inv) return;
+      if (inv.currency && CURRENCIES[inv.currency]) {
+        currentCurrency = inv.currency;
+        document.getElementById('currencySelect').value = currentCurrency;
+      }
+      document.getElementById('reverseChargeCheck').checked = !!inv.reverseCharge;
+      renderVatOptions(inv.vatRate);
+      document.getElementById('invoiceType').value = (inv.invoiceType === 'REMINDER' || inv.invoiceType === 'BETALNINGSPÅMINNELSE') ? 'REMINDER' : 'INVOICE';
+      document.getElementById('invoiceNumber').value = inv.invoiceNumber || '';
+      document.getElementById('invoiceDate').value = inv.invoiceDate || '';
+      document.getElementById('dueDate').value = inv.dueDate || '';
+      document.getElementById('senderName').value = inv.senderName || '';
+      document.getElementById('senderOrg').value = inv.senderOrg || '';
+      document.getElementById('senderAddress').value = inv.senderAddress || '';
+      document.getElementById('senderPayment').value = inv.senderPayment || '';
+      document.getElementById('senderBank').value = inv.senderBank || '';
+      document.getElementById('senderIban').value = inv.senderIban || '';
+      document.getElementById('senderBic').value = inv.senderBic || '';
+      document.getElementById('senderTerms').value = inv.senderTerms || '';
+      currentLogoBase64 = inv.logo || '';
+      document.getElementById('clientName').value = inv.clientName || '';
+      document.getElementById('clientAddress').value = inv.clientAddress || '';
+      document.getElementById('clientPhone').value = inv.clientPhone || '';
+      var container = document.getElementById('itemsContainer');
+      container.innerHTML = '';
+      (inv.items || []).forEach(function(item) { addItemRow(item.desc, item.qty, item.price); });
+      applyLanguageAndCurrency(false);
+    }
+
+    function deleteHistoryItem(index) {
+      var history = getStore(STORAGE_KEYS.HISTORY);
+      history.splice(index, 1);
+      setStore(STORAGE_KEYS.HISTORY, history);
+      renderHistoryList();
+    }
+
+    function exportHistoryToCSV() {
+      var history = getStore(STORAGE_KEYS.HISTORY);
+      if (history.length === 0) { alert(t('alertNoCsv')); return; }
+      var headers = ['Status', t('docType'), t('invoiceNumber'), 'Ref', t('invoiceDate'), t('dueDate'), t('defaultSender'), t('defaultClient'), t('vatLabel'), t('prevTotal')];
+      var rows = history.map(function(inv) {
+        var statusText = inv.status === 'paid' ? t('paid') : t('unpaid');
+        var ocr = generateOCR(inv.invoiceNumber);
+        return [
+          statusText, getTranslatedDocType(inv.invoiceType), inv.invoiceNumber, ocr, inv.invoiceDate, inv.dueDate,
+          '"' + (inv.senderName || '').replace(/"/g, '""') + '"',
+          '"' + (inv.clientName || '').replace(/"/g, '""') + '"',
+          inv.vatRate, '"' + inv.totalText + '"'
+        ].join(CSV_SEPARATOR);
+      });
+      var csvContent = '\uFEFF' + [headers.join(CSV_SEPARATOR)].concat(rows).join('\n');
+      var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'invoice_history_' + new Date().toISOString().split('T')[0] + '.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportFullBackup() {
+      var backupData = {
+        version: '2.7',
+        exportedAt: new Date().toISOString(),
+        senders: getStore(STORAGE_KEYS.SENDERS),
+        clients: getStore(STORAGE_KEYS.CLIENTS),
+        history: getStore(STORAGE_KEYS.HISTORY)
+      };
+      var blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = 'invoice_backup_' + new Date().toISOString().split('T')[0] + '.json';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function importFullBackup(event) {
+      var file = event.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var data = JSON.parse(e.target.result);
+          if (!data.senders && !data.clients && !data.history) { alert(t('alertBadBackup')); return; }
+          if (data.senders) setStore(STORAGE_KEYS.SENDERS, data.senders);
+          if (data.clients) setStore(STORAGE_KEYS.CLIENTS, data.clients);
+          if (data.history) setStore(STORAGE_KEYS.HISTORY, data.history);
+          renderSenderDropdown();
+          renderClientDropdown();
+          renderHistoryList();
+          alert(t('alertBackupRestored'));
+        } catch (err) {
+          alert(t('alertBadJson'));
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function initApp() {
+      setupPwaIconAndManifest();
+
+      var savedLang = DEFAULT_LANG;
+      var savedCurrency = DEFAULT_CURRENCY;
+      try {
+        savedLang = localStorage.getItem(STORAGE_KEYS.LANG) || DEFAULT_LANG;
+        savedCurrency = localStorage.getItem(STORAGE_KEYS.CURRENCY) || LANG_TO_CURRENCY[savedLang] || DEFAULT_CURRENCY;
+      } catch (e) {}
+
+      if (!TRANSLATIONS[savedLang]) savedLang = DEFAULT_LANG;
+      if (!CURRENCIES[savedCurrency]) savedCurrency = DEFAULT_CURRENCY;
+
+      currentLang = savedLang;
+      currentCurrency = savedCurrency;
+
+      setDefaultDates(DEFAULT_PAYMENT_DAYS);
+      addItemRow(t('defaultItemDesc'), 1, 10000);
+      applyLanguageAndCurrency(true);
+    }
+
+    initApp();
+  </script>
+</body>
+</html>
